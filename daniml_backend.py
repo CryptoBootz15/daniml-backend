@@ -59,7 +59,7 @@ def generate():
             }
         }
 
-        response = requests.post("https://fa0f-2600-2b00-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
+        response = requests.post("https://3003-2600-2b00-8e-e55-00-1.ngrok-free.app -> http://localhost:7860", json=payload)
         print("🧠 SD response status:", response.status_code)
         print("🧠 SD response text:", response.text[:1000])
         r = response.json()
