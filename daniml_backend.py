@@ -4,6 +4,7 @@ import json
 import requests
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+from prompt_engine import generate_prompt
 
 app = Flask(__name__, static_folder='static')
 CORS(app)
