@@ -30,10 +30,9 @@ def generate():
         if selected_style == "gangster":
             lora_style = "<lora:daniml_V2_gangsterV2:0.85>"
         elif selected_style == "crypto_nerd":
-            # Make sure to upload the 'crypto_nerd' LoRA
-            lora_style = "<lora:daniml_V2_cryptonerdV2:0.85>"  # Replace with the actual LoRA name for crypto nerd
+            lora_style = "<lora:daniml_V2_cryptonerdV2:0.85>"
         else:
-            lora_style = ""  # No style LoRA or another default style
+            lora_style = ""
 
     # Use the modular prompt engine with the chosen LoRAs and optional user-selected style
     result = generate_prompt(animal, prompt_buckets, override_style=selected_style)
@@ -48,8 +47,8 @@ def generate():
         "width": 768,
         "height": 768,
         "sampler_name": "DPM++ 2M",
-        "batch_size": 3,  # Generate 3 images
-        "n_iter": 1,  # Only one iteration needed to generate the batch
+        "batch_size": 3,
+        "n_iter": 1,
         "save_images": False,
         "send_images": True,
         "alwayson_scripts": {
@@ -59,23 +58,18 @@ def generate():
         }
     }
 
-    # Make the request to the image generation API
-    response = requests.post("https://fa0f-2600-2b00-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
-    r = response.json()
-    
-    # Debugging log to print out what Stable Diffusion is returning
-    print("Generated Images:", r.get('images'))
-
-    # Ensure that images are in base64 format and return them
-    if 'images' in r:
-        # Return the images as base64 strings
-        image_data = [f"data:image/png;base64,{img}" for img in r['images']]
-    else:
+    try:
+        response = requests.post("https://fa0f-2600-2b00-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
+        print("🧠 SD response status:", response.status_code)
+        print("🧠 SD response text:", response.text[:500])
+        r = response.json()
+        image_data = [f"data:image/png;base64,{img}" for img in r.get('images', [])]
+    except Exception as e:
+        print("🔥 SD generation failed:", e)
         image_data = None
 
-    # Return the generated images and other data as a response
     return jsonify({
-        "image": image_data,  # Return all three images in an array
+        "image": image_data,
         "prompt": prompt,
         "negative_prompt": negative_prompt,
         "traits": result["traits"],
