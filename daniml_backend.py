@@ -59,7 +59,7 @@ def generate():
     }
 
     # Make the request to the image generation API
-    response = requests.post("https://fa0f-2600-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
+    response = requests.post("https://fa0f-2600-2b00-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
     r = response.json()
     
     # Debugging log to print out what Stable Diffusion is returning
