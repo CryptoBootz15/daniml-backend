@@ -82,19 +82,14 @@ def generate():
     try:
         response = requests.post("https://fa0f-2600-2b00-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
         print("🧠 SD response status:", response.status_code)
-        print("🧠 SD response text:", response.text[:500])
-        r = response.json()
-        image_data = [f"data:image/png;base64,{img}" for img in r.get('images', [])]
-    except Exception as e:
-        print("🔥 SD generation failed:", e)
-        image_data = None
+        print("🧠 SD raw text:", response.text[:500])  # limit output
 
-    return jsonify({
-        "image": image_data,
-        "prompt": prompt,
-        "negative_prompt": negative_prompt,
-        "traits": result["traits"],
-        "style": selected_style
+    try:
+        r = response.json()
+        except Exception as e:
+        print("🔥 Could not parse JSON from SD:", e)
+        return jsonify({"error": "Stable Diffusion returned invalid response"}), 500
+
     })
 
 @app.route("/", defaults={"path": ""})
