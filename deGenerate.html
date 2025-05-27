@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DANIML Agent – deGenerate Your Beast</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #00ffff;
+      font-family: 'Bebas Neue', sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    .agent-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #111;
+      border: 2px solid #00ffff;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 0 20px #39ff14;
+    }
+    select, input {
+      width: 80%;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background: #222;
+      color: #00ffff;
+      border: 1px solid #00ffff;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .generate-button {
+      background: #8f00ff;
+      color: white;
+      font-size: 1.2rem;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 12px #8f00ff, 0 0 20px #ff00ff;
+      margin-top: 1rem;
+    }
+    .generate-button:hover {
+      background: #c300ff;
+    }
+    .generated-image {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+    }
+    .generated-image img {
+      max-width: 100%;
+      border: 2px solid #00ffff;
+      border-radius: 12px;
+      margin: 1rem;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      const lockTraitCheckbox = document.getElementById('lock-trait-checkbox');
+      const lockedTraitSelect = document.getElementById('locked-trait');
+
+      lockTraitCheckbox.addEventListener('change', function () {
+        lockedTraitSelect.style.display = lockTraitCheckbox.checked ? 'block' : 'none';
+        if (!lockTraitCheckbox.checked) lockedTraitSelect.selectedIndex = 0;
+      });
+    });
+  </script>
+</head>
+<body>
+
+<nav style="margin-bottom: 2rem;">
+  <ul style="display: flex; justify-content: center; list-style: none; padding: 0; gap: 2rem; font-size: 1.2rem;">
+    <li><a href="index.html" style="color: #00ffff; text-decoration: none;">Home</a></li>
+    <li><a href="tokenomics.html" style="color: #00ffff; text-decoration: none;">Tokenomics</a></li>
+    <li><a href="gallery.html" style="color: #00ffff; text-decoration: none;">Gallery</a></li>
+    <li><a href="leaderboard.html" style="color: #00ffff; text-decoration: none;">Leaderboard</a></li>
+    <li><a href="airdrop.html" style="color: #00ffff; text-decoration: none;">Airdrop</a></li>
+  </ul>
+</nav>
+
+<header>
+  <div class="banner">
+    <img src="banner.jpg" alt="DANIML Banner">
+  </div>
+  <h1>🎨 deGenerate Your DANIML</h1>
+  <p>Choose your animal and optionally lock in one trait. All prompts are randomized from pre-approved DANIML backgrounds. No editing allowed.</p>
+</header>
+<section class="agent-wrapper">
+  <h2>🧠 Agent Prompt Engine</h2>
+  <form id="generate-form">
+    <select name="animal">
+      <option disabled selected>Select Animal</option>
+      <option>Alpaca</option><option>Badger</option><option>Fox</option><option>Monkey</option><option>Pig</option><option>Rat</option><option>Turtle</option>
+    </select>
+    <label style="display: block; margin-top: 0.5rem;">Select Style (Optional)</label>
+    <select name="style" id="style-select" style="width: 80%; margin-bottom: 0.5rem;">
+      <option value="">Random Style (Free)</option>
+      <option value="gangster">Gangster (Costs Extra)</option>
+      <option value="crypto_nerd">Crypto Nerd (Costs Extra)</option>
+    </select>
+    <input type="text" id="author-name" name="author" placeholder="Enter your name or alias" />
+    <button id="connect-btn" class="generate-button" type="button">🔌 Connect Wallet</button>
+    <p id="token-balance" style="color:#00ffcc; margin-top: 0.25rem;">DANIML Balance: Not connected</p>
+    <p id="wallet-address" style="color:#00ffcc; margin-top: 0.5rem;"></p>
+    <button class="generate-button" type="submit" id="generate-button" style="display:none;" disabled>⚡ deGenerate</button>
+  </form>
+  <div class="generated-image" id="generated-result"></div>
+</section>
+<footer>
+  <p>© 2025 DANIML. Made in the alley with love. Powered by the Agent.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.7.1/dist/CoinbaseWalletSDK.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.12/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+  const tokenAddress = "0x24f316211D25748286fbB66FF133F2deFA174CC3";
+  const tokenAbi = [
+    "function balanceOf(address) view returns (uint256)",
+    "function decimals() view returns (uint8)",
+    "function totalSupply() view returns (uint256)"
+  ];
+  let provider = null;
+  let userAddress = null;
+
+  const providerOptions = {
+    walletconnect: {
+      package: window.WalletConnectProvider.default,
+      options: {
+        rpc: { 8453: "https://mainnet.base.org" },
+        chainId: 8453
+      }
+    },
+    coinbasewallet: {
+      package: window.CoinbaseWalletSDK,
+      options: {
+        appName: "DANIML",
+        infuraId: "527bf5cc0c0620ae459bbb39d92cfbb4",
+        chainId: 8453,
+        darkMode: true
+      }
+    }
+  };
+
+  const web3Modal = new window.Web3Modal.default({ cacheProvider: false, providerOptions, theme: "dark" });
+
+  async function switchToBaseNetwork() {
+    const baseChainData = {
+      chainId: '0x2105',
+      chainName: 'Base Mainnet',
+      nativeCurrency: {
+        name: 'Ethereum',
+        symbol: 'ETH',
+        decimals: 18
+      },
+      rpcUrls: ['https://mainnet.base.org'],
+      blockExplorerUrls: ['https://basescan.org']
+    };
+
+    try {
+      await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: baseChainData.chainId }] });
+      return true;
+    } catch (switchError) {
+      if (switchError.code === 4902) {
+        try {
+          await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [baseChainData] });
+          return true;
+        } catch (addError) {
+          console.error("Add chain error:", addError);
+          alert("Please approve adding Base network to continue.");
+        }
+      } else {
+        console.error("Switch error:", switchError);
+        alert("Please switch to Base Mainnet to use this dApp.");
+      }
+    }
+    return false;
+  }
+
+  document.getElementById('connect-btn').addEventListener('click', async () => {
+    try {
+      const instance = await web3Modal.connect();
+      provider = new ethers.providers.Web3Provider(instance);
+      let signer = provider.getSigner();
+      userAddress = await signer.getAddress();
+
+      const network = await provider.getNetwork();
+      if (network.chainId !== 8453) {
+        const switched = await switchToBaseNetwork();
+        if (!switched) throw new Error("User must switch to Base Mainnet.");
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        signer = provider.getSigner();
+      }
+
+      const token = new ethers.Contract(tokenAddress, tokenAbi, signer);
+      const balanceRaw = await token.balanceOf(userAddress);
+      const balance = parseFloat(ethers.utils.formatUnits(balanceRaw, 18));
+
+      document.getElementById('wallet-address').innerText = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+      document.getElementById('connect-btn').innerText = 'Connected';
+      document.getElementById('connect-btn').disabled = true;
+      document.getElementById('token-balance').innerText = `DANIML Balance: ${balance.toFixed(2)}`;
+
+      if (balance > 0) {
+        const genBtn = document.getElementById('generate-button');
+        genBtn.style.display = 'inline-block';
+        genBtn.disabled = false;
+      }
+
+    } catch (err) {
+      console.error('Wallet connection failed:', err);
+    }
+  });
+});
+// Handle deGenerate form submission
+document.getElementById('generate-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const animal = document.querySelector('select[name="animal"]').value;
+  const alias = document.getElementById('author-name').value.trim();
+
+  if (!animal || animal === "Select Animal") {
+    alert("Please select an animal.");
+    return;
+  }
+
+  try {
+    const response = await fetch('http://127.0.0.1:5000/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ animal, alias, style: document.getElementById('style-select').value })
+    });
+
+    const data = await response.json();
+    const resultDiv = document.getElementById('generated-result');
+
+    // Check if the response contains base64 image data
+    if (data.image && Array.isArray(data.image)) {
+      resultDiv.innerHTML = data.image.map(base64Str => {
+        return `<img src="${base64Str}" alt="Generated DANIML" style="max-width: 100%; border: 2px solid #00ffff; border-radius: 12px; margin: 1rem 0;" />`;
+      }).join('');
+    } else {
+      alert("No image or prompt returned.");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Generation failed.");
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+/* ===== IMPORTS & BASE ===== */
+
+body {
+  background-color: #0a0a0a;
+  color: #f4f4f4;
+  font-family: 'Bebas Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('graffiti-wall.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2 {
+  font-family: 'Rubik Glitch', cursive;
+  color: #00ffff;
+  text-shadow:
+    0 0 8px #00ffff,
+    0 0 16px #ff00ff,
+    0 0 24px #ff00ff,
+    2px 2px 6px #000;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2.2rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== HEADER & FOOTER ===== */
+header, footer {
+  background: rgba(10, 10, 10, 0.95);
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 4px solid #ff00ff;
+  box-shadow: 0 0 15px #ff00ff55;
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+nav a {
+  font-family: 'Rubik Glitch', cursive;
+  color: #39ff14;
+  text-shadow: 0 0 6px #39ff14, 0 0 10px #00ffcc;
+  margin: 0 15px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  border-bottom: 2px solid #39ff14;
+  text-shadow: 0 0 10px #39ff14, 0 0 15px #00ffcc;
+}
+
+/* ===== BUTTONS ===== */
+button {
+  font-family: 'Rubik Glitch', cursive;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #8f00ff;
+  color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow:
+    0 0 10px #8f00ff,
+    0 0 20px #8f00ff,
+    0 0 30px #8f00ff;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #c300ff;
+  box-shadow:
+    0 0 15px #c300ff,
+    0 0 30px #c300ff,
+    0 0 40px #c300ff;
+}
+
+/* ===== FORM + CONTROL STYLING ===== */
+.degenerate-controls {
+  background-color: rgba(18, 18, 18, 0.9);
+  border: 2px solid #00ffcc;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 0 0 20px #00ffcc66;
+}
+
+.degenerate-controls label {
+  color: #00ffcc;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.degenerate-controls textarea {
+  width: 100%;
+  min-height: 80px;
+  background-color: #1c1c1c;
+  color: #fff;
+  border: 1px solid #00ffcc44;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 20px;
+  resize: vertical;
+  font-family: monospace;
+  font-size: 1rem;
+  box-shadow: inset 0 0 10px #00ffcc22;
+}
+
+.degenerate-controls textarea:focus {
+  outline: none;
+  border-color: #00ffcc;
+  box-shadow: 0 0 10px #00ffcc55;
+}
+
+/* ===== SECTION / CARD STYLING ===== */
+section {
+  padding: 2rem 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  margin: 2rem auto;
+  border-radius: 8px;
+  max-width: 900px;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.3);
+}
+
+/* ===== IMAGE BANNER ===== */
+.banner img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  margin: 0 auto;
+}
+
+/* ===== SOCIAL ===== */
+.social-links a {
+  color: #ffcc00;
+  margin: 0 10px;
+  display: inline-block;
+  text-decoration: none;
+  font-size: 1.1rem;
+  text-shadow: 0 0 6px #ffcc00aa;
+  transition: 0.2s;
+}
+
+.social-links a:hover {
+  color: #fff;
+  text-shadow: 0 0 12px #ffcc00, 0 0 18px #ffcc00;
+}
+
+/* ===== RESPONSIVE ===== */
+@media screen and (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .banner img {
+    max-height: 240px;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 1.2rem;
+    padding: 14px;
+  }
+
+  .social-links a {
+    display: block;
+    margin: 10px 0;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  body {
+    font-size: 20px;
+  }
+
+  h1 {
+    font-size: 5rem;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 3.2rem;
+    line-height: 1.2;
+  }
+
+  nav a {
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+  }
+
+  button {
+    font-size: 1.5rem;
+    padding: 18px 32px;
+  }
+
+  .social-links a {
+    font-size: 1.3rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+}

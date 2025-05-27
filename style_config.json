@@ -1,0 +1,37 @@
+{
+    "no_style": {
+        "core_traits": [],
+        "optional_traits": [],
+        "lora_tag": null,
+        "lora_weight": 0.0
+    },
+    "gangster": {
+        "core_traits": [
+            "gold chain"
+        ],
+        "optional_traits": [
+            "black beanie",
+            "pixelated sunglasses",
+            "cigar",
+            "hoodie (hood down)",
+            "sweatpants"
+        ],
+        "lora_tag": "daniml_V2_gangsterV2",
+        "lora_weight": 1.0
+    },
+    "crypto_nerd": {
+        "core_traits": [
+            "glowing eyes"
+        ],
+        "optional_traits": [
+            "ledger wallet",
+            "pixelated sunglasses",
+            "bitcoin hoodie",
+            "khakis",
+            "laptop",
+            "phone"
+        ],
+        "lora_tag": "daniml_V2_cryptonerdV2",
+        "lora_weight": 1.0
+    }
+}
