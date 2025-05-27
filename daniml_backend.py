@@ -59,42 +59,42 @@ def generate():
             }
         }
 
-try:
-    # Send request to Stable Diffusion
-    response = requests.post("https://3003-2600-2b00-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
-    print("🧠 SD response status:", response.status_code)
-    print("🧠 SD raw text:", response.text[:500])  # for debugging
+        try:
+            # Send request to Stable Diffusion
+            response = requests.post("https://3003-2600-2b00-8e-e55-00-1.ngrok-free.app/sdapi/v1/txt2img", json=payload)
+            print("🧠 SD response status:", response.status_code)
+            print("🧠 SD raw text:", response.text[:500])  # for debugging
 
-    # Try parsing JSON
-    try:
-        r = response.json()
+            # Try parsing JSON
+            try:
+                r = response.json()
+            except Exception as e:
+                print("🔥 Could not parse JSON from SD:", e)
+                return jsonify({"error": "Stable Diffusion returned invalid response"}), 500
+
+            # Format and return images
+            image_data = [f"data:image/png;base64,{img}" for img in r.get('images', [])]
+
+            return jsonify({
+                "image": image_data,
+                "prompt": prompt,
+                "negative_prompt": negative_prompt,
+                "traits": result["traits"],
+                "style": selected_style
+            })
+
     except Exception as e:
-        print("🔥 Could not parse JSON from SD:", e)
-        return jsonify({"error": "Stable Diffusion returned invalid response"}), 500
-
-    # Format and return images
-    image_data = [f"data:image/png;base64,{img}" for img in r.get('images', [])]
-
-    return jsonify({
-        "image": image_data,
-        "prompt": prompt,
-        "negative_prompt": negative_prompt,
-        "traits": result["traits"],
-        "style": selected_style
-    })
-
-except Exception as e:
-    print("🔥 API crashed:", e)
-    return jsonify({"error": str(e)}), 500
+            print("🔥 API crashed:", e)
+            return jsonify({"error": str(e)}), 500
 
 
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'deGenerate.html')
+        @app.route("/", defaults={"path": ""})
+        @app.route("/<path:path>")
+        def serve(path):
+            if path != "" and os.path.exists(app.static_folder + '/' + path):
+                return send_from_directory(app.static_folder, path)
+            else:
+                return send_from_directory(app.static_folder, 'deGenerate.html')
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        if __name__ == "__main__":
+            app.run(debug=True)
